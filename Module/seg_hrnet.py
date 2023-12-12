@@ -108,7 +108,6 @@ class Bottleneck(nn.Module):
 
         return out
 
-
 class HighResolutionModule(nn.Module):
     def __init__(self, num_branches, blocks, num_blocks, num_inchannels,
                  num_channels, fuse_method, multi_scale_output=True):
@@ -257,7 +256,16 @@ class HighResolutionModule(nn.Module):
 
 blocks_dict = {
     'BASIC': BasicBlock,
-    'BOTTLENECK': Bottleneck
+    'BOTTLENECK': Bottleneck,
+    'SEBASIC': SEBasicBlock,
+    'SEBOTTLENECK': SEBottleneck,
+    'CBAMBASIC': CBAMBasicBlock,
+    'CBAMBOTTLENECK': CBAMBottleneck,
+    'SCSCBASIC': SCSEBasicBlock,
+    'SCSEBOTTLENECK': SCSEBottleneck,
+    'COORDBASIC': COORDBasicBlock,
+    'COORDBOTTLENECK': COORDBottleneck
+
 }
 
 

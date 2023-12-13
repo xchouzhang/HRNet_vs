@@ -25,7 +25,8 @@ from .blocks import SEBasicBlock, SEBottleneck ,\
                     CBAMBasicBlock, CBAMBottleneck, \
                     COORDBasicBlock, COORDBottleneck,\
                     TripletBasicBlock, TripletBottleneck, \
-                    SPBasicBlock, SPBottleneck
+                    SPBasicBlock, SPBottleneck,\
+                    DualBasicBlock, DualBottleneck
 
 
 
@@ -274,7 +275,9 @@ blocks_dict = {
     'TRIPBASIC': TripletBasicBlock,
     'TRIPBOTTLENECK': TripletBottleneck,
     'SPBASIC': SPBasicBlock,
-    'SPBOTTLENECK': SPBottleneck
+    'SPBOTTLENECK': SPBottleneck,
+    'DUALBASIC': DualBasicBlock,
+    'DUALBOTTLENECK': DualBottleneck
 }
 
 

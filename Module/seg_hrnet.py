@@ -20,7 +20,13 @@ import torch.nn.functional as F
 
 # from .bn_helper import nn.BatchNorm2d, nn.BatchNorm2d_class, True
 
-from blocks import SEBasicBlock, SEBottleneck ,SCSEBasicBlock,SCSEBottleneck, CBAMBasicBlock, CBAMBottleneck, COORDBasicBlock, COORDBottleneck
+from .blocks import SEBasicBlock, SEBottleneck ,\
+                    SCSEBasicBlock,SCSEBottleneck, \
+                    CBAMBasicBlock, CBAMBottleneck, \
+                    COORDBasicBlock, COORDBottleneck,\
+                    TripletBasicBlock, TripletBottleneck, \
+                    SPBasicBlock, SPBottleneck
+
 
 
 
@@ -261,11 +267,14 @@ blocks_dict = {
     'SEBOTTLENECK': SEBottleneck,
     'CBAMBASIC': CBAMBasicBlock,
     'CBAMBOTTLENECK': CBAMBottleneck,
-    'SCSCBASIC': SCSEBasicBlock,
+    'SCSEBASIC': SCSEBasicBlock,
     'SCSEBOTTLENECK': SCSEBottleneck,
     'COORDBASIC': COORDBasicBlock,
-    'COORDBOTTLENECK': COORDBottleneck
-
+    'COORDBOTTLENECK': COORDBottleneck,
+    'TRIPBASIC': TripletBasicBlock,
+    'TRIPBOTTLENECK': TripletBottleneck,
+    'SPBASIC': SPBasicBlock,
+    'SPBOTTLENECK': SPBottleneck
 }
 
 

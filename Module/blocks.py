@@ -6,10 +6,12 @@ import torch._utils
 import torch.nn.functional as F
 
 
-from atten.se import SE2
-from atten.cbam import CBAM
-from atten.scse import SCSE
-from atten.coorattention import CoordAtt
+from Module.atten.se import SE
+from Module.atten.cbam import CBAM
+from Module.atten.scse import SCSE
+from Module.atten.coorattention import CoordAtt
+from Module.atten.triplet import TripletAttention
+from Module.atten.strip_pooling import SPBlock
 
 
 
@@ -447,6 +449,182 @@ class COORDBottleneck(nn.Module):
         out = self.relu(out)
 
         return out
+    
+
+# -------------------------------------
+# TripletAttention + Basic or Bottleneck
+# ------------------------------------ 
+
+class TripletBasicBlock(nn.Module):
+    expansion = 1
+
+    def __init__(self, inplanes, planes, stride=1, downsample=None):
+        super(TripletBasicBlock, self).__init__()
+        self.conv1 = conv3x3(inplanes, planes, stride)
+        self.bn1 = nn.BatchNorm2d(planes, momentum=BN_MOMENTUM)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = conv3x3(planes, planes)
+        self.bn2 = nn.BatchNorm2d(planes, momentum=BN_MOMENTUM)
+        self.downsample = downsample
+        self.stride = stride
+
+        self.trip = TripletAttention(planes)
+
+    def forward(self, x):
+        residual = x
+
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+
+        out = self.trip(out)
+
+        if self.downsample is not None:
+            residual = self.downsample(x)
+
+        out = out + residual
+        out = self.relu(out)
+
+        return out
+
+
+class TripletBottleneck(nn.Module):
+    expansion = 4
+
+    def __init__(self, inplanes, planes, stride=1, downsample=None):
+        super(TripletBottleneck, self).__init__()
+        self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(planes, momentum=BN_MOMENTUM)
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride,
+                               padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(planes, momentum=BN_MOMENTUM)
+        self.conv3 = nn.Conv2d(planes, planes * self.expansion, kernel_size=1,
+                               bias=False)
+        self.bn3 = nn.BatchNorm2d(planes * self.expansion,
+                               momentum=BN_MOMENTUM)
+        self.relu = nn.ReLU(inplace=True)
+        self.downsample = downsample
+        self.stride = stride
+
+        self.trip = TripletAttention(planes * self.expansion)
+
+    def forward(self, x):
+        residual = x
+
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out = self.relu(out)
+
+        out = self.conv3(out)
+        out = self.bn3(out)
+
+        out = self.trip(out)
+
+        if self.downsample is not None:
+            residual = self.downsample(x)
+
+        out = out + residual
+        out = self.relu(out)
+
+        return out
+    
+
+
+
+# ----------------------------------------------------------------
+# Strip pooling -> Basic and BottleNeck
+# ----------------------------------------------------------------
+
+class SPBasicBlock(nn.Module):
+    expansion = 1
+
+    def __init__(self, inplanes, planes, stride=1, downsample=None):
+        super(SPBasicBlock, self).__init__()
+        self.conv1 = conv3x3(inplanes, planes, stride)
+        self.bn1 = nn.BatchNorm2d(planes, momentum=BN_MOMENTUM)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = conv3x3(planes, planes)
+        self.bn2 = nn.BatchNorm2d(planes, momentum=BN_MOMENTUM)
+        self.downsample = downsample
+        self.stride = stride
+
+        self.spm = SPBlock(planes, planes, norm_layer=nn.BatchNorm2d)
+
+    def forward(self, x):
+        residual = x
+
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = out * self.spm(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+
+        if self.downsample is not None:
+            residual = self.downsample(x)
+
+        out = out + residual
+        out = self.relu(out)
+
+        return out
+
+
+class SPBottleneck(nn.Module):
+    expansion = 4
+
+    def __init__(self, inplanes, planes, stride=1, downsample=None):
+        super(SPBottleneck, self).__init__()
+        self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(planes, momentum=BN_MOMENTUM)
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride,
+                               padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(planes, momentum=BN_MOMENTUM)
+        self.conv3 = nn.Conv2d(planes, planes * self.expansion, kernel_size=1,
+                               bias=False)
+        self.bn3 = nn.BatchNorm2d(planes * self.expansion,
+                               momentum=BN_MOMENTUM)
+        self.relu = nn.ReLU(inplace=True)
+        self.downsample = downsample
+        self.stride = stride
+
+        self.spm = SPBlock(planes, planes , norm_layer=nn.BatchNorm2d)
+
+    def forward(self, x):
+        residual = x
+
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out = self.relu(out)
+
+        out = out * self.spm(out)
+
+        out = self.conv3(out)
+        out = self.bn3(out)
+
+        if self.downsample is not None:
+            residual = self.downsample(x)
+
+        out = out + residual
+        out = self.relu(out)
+
+        return out
+
+
+    
+
 
 
 
@@ -456,7 +634,7 @@ if __name__ == "__main__":
 
     in_put = torch.randn(4,32,64,64)
     
-    model = COORDBottleneck(32, 8)
+    model = SPBasicBlock(32, 32)
 
     out = model(in_put)
 

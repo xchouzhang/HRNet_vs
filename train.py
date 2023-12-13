@@ -113,7 +113,7 @@ def train(args,
     # random.seed(cfg.get("seed", 1337))
 
     # Setup Writer,visualize the precession
-    writer = SummaryWriter(comment=f'{args.cfg_file.split(".")[0]}_StepLR_{lr}_BS_{batch_size}_EPOCHS_{epochs}')
+    writer = SummaryWriter(comment=f'_{args.cfg_file.split(".")[0]}_StepLR_{lr}_BS_{batch_size}_EPOCHS_{epochs}')
 
     # Setup Device
     if torch.cuda.is_available():
@@ -146,7 +146,7 @@ def train(args,
 
     # Set checkpoints
     if save_cp:
-        dir_checkpoint += f'{args.cfg_file.split(".")[0]}_BS_{batch_size}_EPOCHS_{epochs}_time_' \
+        dir_checkpoint += f'_{args.cfg_file.split(".")[0]}_BS_{batch_size}_EPOCHS_{epochs}_time_' \
                           f'{str(datetime.datetime.now()).split(".")[0].replace(" ", "_").replace(":", "_")}'
         os.mkdir(dir_checkpoint)
         logger.info('Created checkpoint directory!')
@@ -331,7 +331,7 @@ def  get_args():
                         help='the path of the the validation mask', dest='valmaskpth')
 
     # 训练超参数
-    parser.add_argument('-e', '--epochs', metavar='E', type=int, default=50,
+    parser.add_argument('-e', '--epochs', metavar='E', type=int, default=100,
                         help='Number of epochs', dest='epochs')
     parser.add_argument('-b', '--batch-size', metavar='B', type=int, nargs='?', default=4 ,
                         help='Batch size', dest='batchsize')
@@ -341,7 +341,7 @@ def  get_args():
 
     # 模型参数
     # 读取配置文件
-    parser.add_argument('-cfg_file', '--cfg-file', type=str, default=r'seg_hrnet.yaml',
+    parser.add_argument('-cfg_file', '--cfg-file', type=str, default=r'seg_se_hrnet.yaml',
                         help='the name of config file', dest='cfg_file')
 
     # log and checkpoint
@@ -385,7 +385,7 @@ if __name__ == '__main__':
 
 
 
-    cfg = update_config(default_config, args.cfg_file)
+    cfg = update_config(default_config, r"./config/" + args.cfg_file)
     model = HighResolutionNet(cfg)
 
     logger.info(f'Network:\n'

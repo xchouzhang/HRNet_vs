@@ -33,12 +33,11 @@ def last_zero_init(m):
         constant_init(m, val=0)
 
 
-
 class ContextBlock(nn.Module):
 
     def __init__(self,
                  inplanes,
-                 ratio,
+                 ratio = 1./4,
                  pooling_type='att',
                  fusion_types=('channel_add', )):
         super(ContextBlock, self).__init__()

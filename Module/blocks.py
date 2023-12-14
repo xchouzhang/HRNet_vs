@@ -720,9 +720,9 @@ class SPBottleneck(nn.Module):
 #         out = self.bn3(out)
 
 #         if self.dual_att:
-#             self.se = self.se(out)
-#             self.gc = self.gc(out)
-#             out = self.se + self.gc
+#             out_se = self.se(out)
+#             out_gc = self.gc(out)
+#             out = out_se + out_gc
 
 
 #         if self.downsample is not None:

@@ -696,7 +696,7 @@ class SPBottleneck(nn.Module):
 
         
 #         # 增加双重注意力
-#         self.dual_att = dual_att
+#         self.dual_att = dual_agit tt
 #         self.se = SE(planes * self.expansion)
 #         self.gc = ContextBlock(planes * self.expansion)
 
@@ -842,9 +842,6 @@ class DualBottleneck(nn.Module):
         return out
 
     
-
-
-
 
 
 if __name__ == "__main__":

@@ -317,17 +317,17 @@ def  get_args():
 
     # 定义数据集的路径
     parser.add_argument('-img_path', '--train-img-path', type=str,
-                        default=r'/data/Train Set/img',
+                        default=r'/data/sgData/Train Set/img',
                         help='the path of the train img', dest='img_path')
     parser.add_argument('-mask_path', '--train-mask-pth', type=str,
-                        default=r'/data/Train Set/msk',
+                        default=r'/data/sgData/Train Set/msk',
                         help='the path of the mask maps', dest='mask_path')
 
     parser.add_argument('-valimgpth', '--validation-image-pth', type=str,
-                        default=r'/data/Val Set/img',
+                        default=r'/data/sgData/Val Set/img',
                         help='the path of the validation img', dest='valimgpath')
     parser.add_argument('-valmaskpth', '--validation-mask-pth', type=str,
-                        default=r'/data/Val Set/msk',
+                        default=r'/data/sgData/Val Set/msk',
                         help='the path of the the validation mask', dest='valmaskpth')
 
     # 训练超参数

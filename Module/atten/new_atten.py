@@ -35,53 +35,34 @@ class NEWSPBlock(nn.Module):
         _, _, h, w = x.size()
 
         x1_1 = self.pool1_1(x)
-        print(x1_1.size())
         x1_2 = self.pool1_2(x)
-        print(x1_2.size())
 
         x1 = torch.cat((x1_1, x1_2), dim = 3)
-        print(x1.size())
         x1 = x1.permute(0, 3, 2, 1).contiguous()
-        print(x1.size())
         x1 = self.conv_pool(x1)
-        print(x1.size())
         x1 = x1.permute(0, 3, 2, 1).contiguous()
-        print(x1.size())
 
         x1 = self.conv1(x1)
-        print(x1.size())
         x1 = self.bn1(x1)
-        print(x1.size())
         x1 = x1.expand(-1, -1, h, w)
-        print(x1.size())
         #x1 = F.interpolate(x1, (h, w))
 
         x2_1 = self.pool2_1(x)
-        print(x2_1.size())
         x2_2 = self.pool2_2(x)
-        print(x2_2.size())
 
         x2 = torch.cat((x2_1, x2_2), dim = 2)
-        print(x2.size())
         x2 = x2.permute(0, 2, 1, 3).contiguous()
-        print(x2.size())
         x2 = self.conv_pool(x2)
-        print(x2.size())
         x2 = x2.permute(0, 2, 1, 3).contiguous()
-        print(x2.size())
 
         x2 = self.conv2(x2)
-        print(x2.size())
         x2 = self.bn2(x2)
-        print(x2.size())
         x2 = x2.expand(-1, -1, h, w)
-        print(x2.size())
         #x2 = F.interpolate(x2, (h, w))
 
         x = self.relu(x1 + x2)
-        print(x.size())
         x = self.conv3(x).sigmoid()
-        print(x.size())
+
         return x
 
 

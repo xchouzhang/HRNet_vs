@@ -373,7 +373,7 @@ class HighResolutionNet(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(
                 in_channels=last_inp_channels,
-                out_channels=n_classes,
+                out_channels=self.n_classes,
                 kernel_size=extra.FINAL_CONV_KERNEL,
                 stride=1,
                 padding=1 if extra.FINAL_CONV_KERNEL == 3 else 0)
@@ -392,8 +392,7 @@ class HighResolutionNet(nn.Module):
                 nn.Conv2d(stage1_out_channel,32,1),
                 nn.BatchNorm2d(32),
                 nn.ReLU(),
-                nn.Conv2d(32,1,1),
-                nn.Sigmoid()
+                nn.Conv2d(32,self.n_classes,1)
             )
 
 

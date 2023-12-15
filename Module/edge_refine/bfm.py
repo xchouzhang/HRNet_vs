@@ -25,7 +25,7 @@ class BFM(nn.Module):
         self.high_conv = nn.Conv2d(high_channels, high_channels//2, 1 )
 
         self.fuse_gate = nn.Sequential(
-            nn.BatchNorm1d(high_channels),
+            nn.BatchNorm2d(high_channels),
             nn.ReLU(),
             nn.Conv2d(high_channels, 8, 1),
             nn.BatchNorm2d(8),
@@ -53,3 +53,5 @@ class BFM(nn.Module):
         gate_out = self.fuse_gate(x_fuse)
 
         x_low = low_feat + low_feat * gate_out
+
+        return x_low

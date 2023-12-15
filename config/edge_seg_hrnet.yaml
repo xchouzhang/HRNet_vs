@@ -57,4 +57,4 @@ MODEL:
       FUSE_METHOD: SUM
 
     EDGE_BRANCH:
-      EDGE_NAME: 'BFM'
+      EDGE_NAME: BAM

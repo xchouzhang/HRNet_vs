@@ -387,7 +387,14 @@ class HighResolutionNet(nn.Module):
             self.edge_block1 = edge_blocks_dict[edge_block_name](stage1_out_channel, self.stage2_cfg['NUM_CHANNELS'][0]* blocks_dict[self.stage2_cfg['BLOCK']].expansion)
             self.edge_block2 = edge_blocks_dict[edge_block_name](stage1_out_channel, self.stage3_cfg['NUM_CHANNELS'][0]* blocks_dict[self.stage3_cfg['BLOCK']].expansion)
             self.edge_block3 = edge_blocks_dict[edge_block_name](stage1_out_channel, self.stage4_cfg['NUM_CHANNELS'][0]* blocks_dict[self.stage4_cfg['BLOCK']].expansion)
-    
+            
+            self.edge_out = nn.Sequential(
+                nn.Conv2d(stage1_out_channel,32,1),
+                nn.BatchNorm2d(32),
+                nn.ReLU(),
+                nn.Conv2d(32,1,1),
+                nn.Sigmoid()
+            )
 
 
     def _make_transition_layer(self, num_channels_pre_layer, num_channels_cur_layer):
@@ -482,8 +489,10 @@ class HighResolutionNet(nn.Module):
         # stage1
         x = self.layer1(x)
         
-        print("stage1")
-        print(x.size())
+        # print("stage1")
+        # print(x.size())
+
+        stage1_out0 = x
 
         # transtion1 + stage2(含fuse)
         x_list = []
@@ -494,9 +503,11 @@ class HighResolutionNet(nn.Module):
                 x_list.append(x)
         y_list = self.stage2(x_list)
 
-        print("stage2")
-        for each in y_list:
-            print(each.size())
+        # print("stage2")
+        # for each in y_list:
+        #     print(each.size())
+
+        stage2_out0 = y_list[0]
 
         # transition2 + stage3(含fuse)
         x_list = []
@@ -510,9 +521,11 @@ class HighResolutionNet(nn.Module):
                 x_list.append(y_list[i])
         y_list = self.stage3(x_list)
 
-        print("stage3")
-        for each in y_list:
-            print(each.size())
+        # print("stage3")
+        # for each in y_list:
+        #     print(each.size())
+        
+        stage3_out0 = y_list[0]
 
         # transition3 + stage4(含fuse)
         x_list = []
@@ -527,10 +540,21 @@ class HighResolutionNet(nn.Module):
 
         x = self.stage4(x_list)
 
-        print("stage4")
-        for each in x:
-            print(each.size())
+        # print("stage4")
+        # for each in x:
+        #     print(each.size())
 
+        stage4_out0 = y_list[0]
+
+
+        # 新增边缘输出
+            
+        edge_out = self.edge_block1(stage1_out0, stage2_out0)
+        edge_out = self.edge_block2(edge_out, stage3_out0)
+        edge_out = self.edge_block3(edge_out, stage4_out0)      
+
+        edge_out = self.edge_out(edge_out)
+        edge_out = F.interpolate(edge_out, size=(H,W),mode="bilinear", align_corners=True)                                                                                                                                                                                                                                               
 
 
         # Upsampling
@@ -544,7 +568,7 @@ class HighResolutionNet(nn.Module):
         x = self.last_layer(x)
         x = F.interpolate(x, (H, W), mode='bilinear', align_corners=ALIGN_CORNERS)
         # print(x.size())
-        return x
+        return x, edge_out
 
     def init_weights(self, pretrained='', ):
         logger.info('=> init weights from normal distribution')
@@ -590,6 +614,9 @@ if __name__ == '__main__':
     model = HighResolutionNet(cfg).to(device)
 
     output = model(input)
+
+    for each in output:
+        print(each.size())
 
 
 

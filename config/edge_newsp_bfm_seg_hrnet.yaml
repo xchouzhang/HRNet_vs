@@ -1,7 +1,7 @@
 
 
 MODEL:
-  NAME: edge_seg_hrnet
+  NAME: edge_newsp_bfm_seg_hrnet
   ALIGN_CORNERS: True
   PRETRAINED: ''
 
@@ -10,7 +10,7 @@ MODEL:
     STAGE1:
       NUM_MODULES: 1
       NUM_RANCHES: 1
-      BLOCK: SPBOTTLENECK
+      BLOCK: NEWSPBOTTLENECK
       NUM_BLOCKS:
       - 4
       NUM_CHANNELS:
@@ -19,7 +19,7 @@ MODEL:
     STAGE2:
       NUM_MODULES: 1
       NUM_BRANCHES: 2
-      BLOCK: SPBASIC
+      BLOCK: NEWSPBASIC
       NUM_BLOCKS:
       - 4
       - 4
@@ -30,7 +30,7 @@ MODEL:
     STAGE3:
       NUM_MODULES: 1
       NUM_BRANCHES: 3
-      BLOCK: SPBASIC
+      BLOCK: NEWSPBASIC
       NUM_BLOCKS:
       - 4
       - 4
@@ -43,7 +43,7 @@ MODEL:
     STAGE4:
       NUM_MODULES: 1
       NUM_BRANCHES: 4
-      BLOCK: SPBASIC
+      BLOCK: NEWSPBASIC
       NUM_BLOCKS:
       - 4
       - 4
@@ -57,4 +57,4 @@ MODEL:
       FUSE_METHOD: SUM
 
     EDGE_BRANCH:
-      EDGE_NAME: BAM
+      EDGE_NAME: BFM

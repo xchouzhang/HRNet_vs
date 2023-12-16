@@ -19,11 +19,7 @@ import torch._utils
 import torch.nn.functional as F
 
 # from .bn_helper import nn.BatchNorm2d, nn.BatchNorm2d_class, True
-import sys
-sys.path.append(r'D:/experiments/Dr_code/HRNet_vs')
-
-
-from blocks import SEBasicBlock, SEBottleneck ,\
+from Module.blocks import SEBasicBlock, SEBottleneck ,\
                     SCSEBasicBlock,SCSEBottleneck, \
                     CBAMBasicBlock, CBAMBottleneck, \
                     COORDBasicBlock, COORDBottleneck,\

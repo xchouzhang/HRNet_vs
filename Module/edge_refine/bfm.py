@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn 
 import torch.nn.functional as F
 
-from blocks import Bottleneck
+from Module.blocks import Bottleneck
 
 ## low feature * gate + low fe
 

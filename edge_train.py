@@ -118,7 +118,7 @@ def train(args,
     # random.seed(cfg.get("seed", 1337))
 
     # Setup Writer,visualize the precession
-    writer = SummaryWriter(comment=f'_{args.cfg_file.split(".")[0]}_jointedge_{args.alpha}_StepLR_{lr}_BS_{batch_size}_EPOCHS_{epochs}')
+    writer = SummaryWriter(comment=f'_{args.cfg_file.split(".")[0]}_jointedge_alpha_{args.alpha}_StepLR_{lr}_BS_{batch_size}_EPOCHS_{epochs}')
 
     # Setup Device
     if torch.cuda.is_available():
@@ -151,7 +151,7 @@ def train(args,
 
     # Set checkpoints
     if save_cp:
-        dir_checkpoint += f'_{args.cfg_file.split(".")[0]}_jointedge_{args.alpha}_StepLR_{lr}_BS_{batch_size}_EPOCHS_{epochs}_time_' \
+        dir_checkpoint += f'_{args.cfg_file.split(".")[0]}_jointedge_alpha_{args.alpha}_StepLR_{lr}_BS_{batch_size}_EPOCHS_{epochs}_time_' \
                           f'{str(datetime.datetime.now()).split(".")[0].replace(" ", "_").replace(":", "_")}'
         os.mkdir(dir_checkpoint)
         logger.info('Created checkpoint directory!')
@@ -359,7 +359,7 @@ def  get_args():
 
     # 模型参数
     # 读取配置文件
-    parser.add_argument('-cfg_file', '--cfg-file', type=str, default=r'edge_seg_hrnet.yaml',
+    parser.add_argument('-cfg_file', '--cfg-file', type=str, default=r'edge_newsp_bfm_seg_hrnet.yaml',
                         help='the name of config file', dest='cfg_file')
     
     # log and checkpoint

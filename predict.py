@@ -11,14 +11,66 @@ import glob
 import numpy as np
 import torch
 import cv2
+import shutil
+
 import torchvision
-from Networks.MyNet import MyNet
 from dataset.datasets import read_tiff
 from config import default_config
 from config import update_config
-from Networks.MyNet import MyNet,get_seg_model
-from evaluate.evaluate import flip_inference
 
+
+from evaluate.evaluate import evaluate, flip_inference
+
+
+def predict(cfg_file, best_model, test_imgs_path, pre_masks_path, save_edge = True):
+
+    # device
+    device = torch.device('cuda'if torch.cuda.is_available() else 'cpu')
+
+    # model
+    if save_edge == True:
+        
+        from Module.seg_hrnet_withedge import HighResolutionNet
+        net = HighResolutionNet(update_config(default_config, cfg_file), 4 ,1).to(device)
+    
+    else:
+        from Module.seg_hrnet import HighResolutionNet
+        net = HighResolutionNet(update_config(default_config, cfg_file), 4, 1).to(device)
+
+    # .pth load
+    net.load_state_dict(torch.load('./pth/best_model.pth', map_location=device)['model_state'])
+
+
+    # make save_mask_path
+    if not os.path.exists(pre_masks_path):
+        os.makedirs(pre_masks_path)
+        "新建pre mask 文件夹"
+    else:
+        shutil.rmtree(pre_masks_path)
+        os.makedirs(pre_masks_path)
+
+    
+
+    
+
+
+
+    # each img path
+    test_img_path = os.path.join(test_imgs_path, os.listdir(test_imgs_path))  
+    
+
+    
+
+
+
+if __name__ == "__main__":
+
+    device = torch.device('cuda'if torch.cuda.is_available() else 'cpu')
+
+
+
+
+    
 
 if __name__ == "__main__":
     # 选择设备，有cuda用cuda，没有就用cpu

@@ -154,7 +154,7 @@ def preprocess(img_fl,label_fl,train_transform,label_transform, aug, edge_mode):
 
 
 class Mydatasets(torch.utils.data.Dataset):
-    def __init__(self, img_pth, label_pth, train_transform, label_transform, with_edge=False, edge_mode='spv',aug=True):
+    def __init__(self, img_pth, label_pth, train_transform, label_transform, with_edge=False, edge_mode='canny',aug=True):
         names = os.listdir(img_pth)
         names = [name for name in names if name.endswith('.tif')]
         num = len(names)

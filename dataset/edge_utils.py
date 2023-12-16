@@ -104,7 +104,7 @@ def grade(img):
 
 def canny(img):
     edge = cv2.Canny(img, 5, 5, apertureSize=3)
-    edge = cv2.dilate(edge, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(2,2)))
+    edge = cv2.dilate(edge, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(5,5)))
 
     return edge
 

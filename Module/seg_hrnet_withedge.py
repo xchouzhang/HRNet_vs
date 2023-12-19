@@ -539,11 +539,12 @@ class HighResolutionNet(nn.Module):
         # for each in x:
         #     print(each.size())
 
-        stage4_out0 = y_list[0]
+        # stage4_out0 = y_list[0]
+        stage4_out0 = x[0]
+
 
 
         # 新增边缘输出
-            
         edge_out = self.edge_block1(stage1_out0, stage2_out0)
         edge_out = self.edge_block2(edge_out, stage3_out0)
         edge_out = self.edge_block3(edge_out, stage4_out0)      

@@ -539,13 +539,7 @@ class HighResolutionNet(nn.Module):
         # for each in x:
         #     print(each.size())
 
-<<<<<<< Updated upstream
-        # stage4_out0 = y_list[0]
         stage4_out0 = x[0]
-
-=======
-        stage4_out0 = x[0]
->>>>>>> Stashed changes
 
 
         # 新增边缘输出

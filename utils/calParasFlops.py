@@ -13,18 +13,29 @@ from thop import profile,clever_format
 from torchsummary import summary
 
 from torchstat import stat
+from calflops import calculate_flops
 
 # 第一种
 def calParasFlops(model,input):
-    flops,params =  profile(model,inputs = (input,))
-    flops, params = clever_format([flops, params], "%.3f")
-    print("The FLOPs:{}".format(flops) , "The parameters:{}".format(params))
-    return flops,params
+    macs,params =  profile(model,inputs = (input,))
+    macs, params = clever_format([macs, params], "%.3f")
+    print("The MACs1:{}".format(macs) , 
+          "The parameters1:{}".format(params))
+    return macs,params
 
 # 第二种,后面的input_size必须是三维的
 # from torchstat import stat
 # stat(model, input_size=(4, 512, 512))
 
+# 第三种
+def calFlopsMacsParas(model, input):
+    flops, macs, params = calculate_flops(model, tuple(input.shape))
+    print("The FLOPs:{}".format(flops) ,
+          "The MACs2:{}".format(macs),
+          "The parameters2:{}".format(params))
+    return flops, macs, params
+
+    
 if __name__ == '__main__':
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -1,0 +1,20 @@
+[2024-01-17 13:37:53,955][testset_evaluate.py][line:95][INFO]Start Evaluating TestSet!
+[2024-01-17 13:37:53,983][testset_evaluate.py][line:105][INFO]Using device:cuda
+[2024-01-17 13:37:54,145][testset_evaluate.py][line:123][INFO]Network:
+	4 input channels
+	1 output channels (classes)
+
+[2024-01-17 13:37:54,369][testset_evaluate.py][line:129][INFO] Pretrained model loaded from file:../checkpoints_seg_sp_hrnet_BS_4_EPOCHS_100_time_2023-12-13_08_47_41/best_model.pth
+[2024-01-17 13:37:54,371][testset_evaluate.py][line:41][INFO]Train Datasets and Validation Datasets has been created!
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:52][INFO]Overall_Acc: 97.8201
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:52][INFO]Precsion: 93.575
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:52][INFO]Recall: 93.636
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:52][INFO]F1_Score: 93.605
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:52][INFO]P_IoU: 87.979
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:52][INFO]Mean_Precsion: 96.134
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:52][INFO]Mean_IoU: 92.693
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:52][INFO]FWIoU: 95.799
+[2024-01-17 13:38:06,125][testset_evaluate.py][line:55][INFO]0: 0.9740627318184837
+[2024-01-17 13:38:06,126][testset_evaluate.py][line:55][INFO]1: 0.8797922706159845
+[2024-01-17 13:38:06,126][testset_evaluate.py][line:138][INFO]The evaluation is over!
+[2024-01-17 13:38:06,126][testset_evaluate.py][line:140][INFO]测试总时间: 0.18333333333333332m

@@ -22,16 +22,9 @@ def flip_inference(model, image, flip=False, with_edge=False):
     if not with_edge:
 
         seg_pred = model(image)
-    
-    else:
-        seg_pred, edge_pred = model(image)
 
-    
-    if flip:
-        
-        if not with_edge:
-
-            # 水平翻转
+        if flip:
+              # 水平翻转
             hflip_img = image.cpu().numpy()[:, :, :, ::-1]      # size:[1,4,512,512]
             seg_hflip_output = model(torch.from_numpy(hflip_img.copy()).cuda())
 
@@ -50,10 +43,15 @@ def flip_inference(model, image, flip=False, with_edge=False):
             
             seg_pred = seg_pred / 3
 
-            return seg_pred
-        
-        else:
-            # 水平翻转
+        return seg_pred
+
+
+    else:
+        seg_pred, edge_pred = model(image)
+
+        if flip:
+
+             # 水平翻转
             hflip_img = image.cpu().numpy()[:, :, :, ::-1]      # size:[1,4,512,512]
             seg_hflip_output, edge_hflip_output = model(torch.from_numpy(hflip_img.copy()).cuda())
 
@@ -84,13 +82,13 @@ def flip_inference(model, image, flip=False, with_edge=False):
             seg_pred = seg_pred / 3
             edge_pred = edge_pred / 3
 
-            return seg_pred, edge_pred
+        return seg_pred, edge_pred
+        
+       
 
         
 
-
-
-def evaluate(test_loader, model, device):
+def evaluate(test_loader, model, device, flip= False, with_edge=False):
 
     test_running_metrics = runningScore(2)
     test_edge_running_metrics = runningScore(2)
@@ -98,31 +96,51 @@ def evaluate(test_loader, model, device):
     model.eval()
     with torch.no_grad():
         test_loader = tqdm(test_loader, desc='Test Set')
-        for index, (test_image, test_mask, test_edge) in enumerate(test_loader):
-            test_image = test_image.to(device)
-            test_mask = test_mask.to(device)
-            test_edge = test_edge.to(device)
 
-            test_mask_pred, test_edge_pred = flip_inference(model, test_image, flip=True)
+        if  with_edge:
+            for index, (test_image, test_mask, test_edge) in enumerate(test_loader):
+                test_image = test_image.to(device)
+                test_mask = test_mask.to(device)
+                test_edge = test_edge.to(device)
 
-            mask_pred = (torch.sigmoid(test_mask_pred) > 0.5).float()
-            mask_pred = mask_pred.squeeze().cpu().numpy()
-            mask_gt = test_mask.squeeze().cpu().numpy()
+                test_mask_pred, test_edge_pred = flip_inference(model, test_image, flip=flip, with_edge=with_edge)
 
-            edge_pred = (torch.sigmoid(test_edge_pred) > 0.5).float()
-            edge_pred = edge_pred.squeeze().cpu().numpy()
-            edge_gt = test_edge.squeeze().cpu().numpy()
+                mask_pred = (torch.sigmoid(test_mask_pred) > 0.5).float()
+                mask_pred = mask_pred.squeeze().cpu().numpy()
+                mask_gt = test_mask.squeeze().cpu().numpy()
 
-
-
-            test_running_metrics.update(mask_gt, mask_pred)
-            test_edge_running_metrics.update(edge_gt, edge_pred)
-
-            test_loader.set_postfix({"Mask_MIoU": '{:.4f}'.format(test_running_metrics.get_scores()[0]['Mean_IoU']),
-                                    "Edge_MIoU": '{:.4f}'.format(test_edge_running_metrics.get_scores()[0]['Mean_IoU'])})
+                edge_pred = (torch.sigmoid(test_edge_pred) > 0.5).float()
+                edge_pred = edge_pred.squeeze().cpu().numpy()
+                edge_gt = test_edge.squeeze().cpu().numpy()
 
 
-    return test_running_metrics, test_edge_running_metrics
+
+                test_running_metrics.update(mask_gt, mask_pred)
+                test_edge_running_metrics.update(edge_gt, edge_pred)
+
+                test_loader.set_postfix({"Mask_MIoU": '{:.4f}'.format(test_running_metrics.get_scores()[0]['Mean_IoU']),
+                                        "Edge_MIoU": '{:.4f}'.format(test_edge_running_metrics.get_scores()[0]['Mean_IoU'])})
+                
+            return test_running_metrics, test_edge_running_metrics
+        
+        else:
+
+            for index, (test_image, test_mask) in enumerate(test_loader):
+                test_image = test_image.to(device)
+                test_mask = test_mask.to(device)
+
+                test_mask_pred = flip_inference(model, test_image, flip=False, with_edge=with_edge)
+
+                mask_pred = (torch.sigmoid(test_mask_pred) > 0.5).float()
+                mask_pred = mask_pred.squeeze().cpu().numpy()
+                mask_gt = test_mask.squeeze().cpu().numpy()
+
+                test_running_metrics.update(mask_gt, mask_pred)
+      
+                test_loader.set_postfix({"Mask_MIoU": '{:.4f}'.format(test_running_metrics.get_scores()[0]['Mean_IoU'])})
+                
+            return test_running_metrics
+
 
 
 

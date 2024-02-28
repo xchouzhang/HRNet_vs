@@ -52,12 +52,12 @@ class SegmentationModelOutputWrapper(torch.nn.Module):
 img_path = r"./img/768.tif"
 # best_model_path = r"../checkpoints_seg_hrnet_BS_4_EPOCHS_100_time_2023-12-13_09_37_58/CP_epoch40.pth"
 # best_model_path = r"../checkpoints_seg_cbam_hrnet_BS_4_EPOCHS_100_time_2023-12-12_17_58_28/CP_epoch40.pth"
-best_model_path = r"../checkpointsseg_se_hrnet_BS_4_EPOCHS_100_time_2023-12-12_17_21_01/best_model.pth"
-# best_model_path = r"../checkpoints_seg_newsp_hrnet_BS_4_EPOCHS_100_time_2023-12-14_11_24_27/best_model.pth"
+# best_model_path = r"../checkpointsseg_se_hrnet_BS_4_EPOCHS_100_time_2023-12-12_17_21_01/best_model.pth"
+best_model_path = r"../checkpoints_seg_newsp_hrnet_BS_4_EPOCHS_100_time_2023-12-14_11_24_27/best_model.pth"
 # cfg_file_name = "seg_hrnet.yaml"
 # cfg_file_name = "seg_cbam_hrnet.yaml"
-cfg_file_name = "seg_se_hrnet.yaml"
-# cfg_file_name = "seg_newsp_hrnet.yaml"
+# cfg_file_name = "seg_se_hrnet.yaml"
+cfg_file_name = "seg_newsp_hrnet.yaml"
 
 
 
@@ -81,7 +81,7 @@ model.load_state_dict(torch.load(best_model_path, map_location=device)['model_st
 model.eval()
 
 
-# # 获取模型所有层最底层的名称
+# 获取模型所有层最底层的名称
 # all_layers = get_all_layers(model)
 # for name in all_layers:
 #     print(name)
@@ -123,7 +123,8 @@ img_1 = np.float32(img_)/255
 # select visualized layers
 
 # target_layers =[model.model.layer1[3]]
-target_layers =[model.model.stage3[0].branches[0][3]]
+# target_layers =[model.model.stage3[0].branches[0][3]]
+target_layers =[model.model.stage4[0].branches[0][3].spm.conv3]
 targets = [SemanticSegmentationTarget(greenhouse_category, greenhouse_mask_float)]
 
 # cam 实例化
@@ -139,7 +140,7 @@ with GradCAM(model=model, target_layers=target_layers) as cam:
 cam_image = Image.fromarray(cam_image)
 cam_image.show()
 
-cam_image.save(r"./img/768/768_se_stage3-0-branch0-3.jpg")
+cam_image.save(r"./img/768/768_se_stage4-0-branch0-3-spm.jpg")
 # cam_image.save(r"./img/768/768_newsp-layer1-3.jpg")
 
 

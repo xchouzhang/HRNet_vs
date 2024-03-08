@@ -37,7 +37,7 @@ def predict(cfg_file, best_model_path, test_imgs_path, pred_msks_path, save_edge
         net = HighResolutionNet(update_config(default_config, cfg_file), 4, 1).to(device)
 
     # .pth load
-    net.load_state_dict(torch.load(best_model_path, map_location=device)['model_state'])
+    net.load_state_dict(torch.load(best_model_path, map_location=device))
 
 
     # make pred_mask_path
@@ -89,11 +89,11 @@ def predict(cfg_file, best_model_path, test_imgs_path, pred_msks_path, save_edge
 
         # each save path 
         each_pred_msk_name = each_test_img_name
-        each_pred_msk_path = os.path.join(pred_msks_path, each_pred_msk_name)
+        each_pred_msk_path = os.path.join(pred_msks_path, each_pred_msk_name.split(".")[0] + "_hrnetv2_msk.jpg")
 
         if save_edge:
             each_pred_edge_name = each_test_img_name
-            each_pred_edge_path = os.path.join(pred_edges_path, each_pred_edge_name)
+            each_pred_edge_path = os.path.join(pred_edges_path, each_pred_edge_name.split(".")[0] + "_hrnetv2_edge.jpg")
 
         # save 
         
@@ -135,10 +135,11 @@ def predict(cfg_file, best_model_path, test_imgs_path, pred_msks_path, save_edge
 
 if __name__ == "__main__":
 
-    predict("./config/edge_newsp_bfm_seg_hrnet.yaml", 
-            "./pth/best_model.pth",
-            "./data/Test/img", 
-            "./data/Test/msk_pred", 
-            save_edge = True, 
+    predict("./config/seg_hrnet.yaml", 
+            "./checkpoints_seg_hrnet_BS_4_EPOCHS_100_time_2023-12-13_09_37_58/CP_epoch40.pth",
+            "./test_image/input images", 
+            "./test_image/msk_pred", 
+            save_edge = False, 
             flip = False)
+    
     

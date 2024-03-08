@@ -38,6 +38,8 @@ def predict(cfg_file, best_model_path, test_imgs_path, pred_msks_path, save_edge
 
     # .pth load
     net.load_state_dict(torch.load(best_model_path, map_location=device))
+    # net.load_state_dict(torch.load(best_model_path, map_location=device)['model_state'])
+
 
 
     # make pred_mask_path

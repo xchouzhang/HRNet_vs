@@ -1,3 +1,11 @@
+'''
+Author: your name
+Date: 2024-02-27 11:23:11
+LastEditors: your name
+LastEditTime: 2024-04-11 14:05:41
+Description: 
+FilePath: \HRNet_vs\tools\calParams.py
+'''
 import sys
 sys.path.append("..")
 
@@ -25,6 +33,7 @@ cfgfileList = [
     # "seg_sp_hrnet.yaml",
     # "seg_se_gc_hrnet.yaml",
     # "seg_newsp_hrnet.yaml"
+    "seg_hrnet_32.yaml",
 
 ]
 

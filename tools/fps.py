@@ -22,9 +22,10 @@ if __name__ == '__main__':
     # cfg_file = "seg_scse_hrnet.yaml"
     # cfg_file = "seg_coord_hrnet.yaml"
     # cfg_file = "seg_trip_hrnet.yaml"
-    cfg_file = "seg_sp_hrnet.yaml"
+    # cfg_file = "seg_sp_hrnet.yaml"
     # cfg_file = "seg_se_gc_hrnet.yaml"
     # cfg_file = "seg_newsp_hrnet.yaml"
+    cfg_file = "seg_hrnet_32.yaml"
 
     cfg = update_config(default_config, r"../config/" + cfg_file)
     model = HighResolutionNet(cfg).to(device)
